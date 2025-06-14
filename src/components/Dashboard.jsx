@@ -453,7 +453,7 @@ const Dashboard = ({ user, setUser }) => {
                         key={log.id}
                         className="position-relative my-2 shadow-lg border-0"
                         style={{
-                          width: "85%",
+                          width: "95%",
                         }}
                       >
                         <Card.Header
@@ -488,18 +488,31 @@ const Dashboard = ({ user, setUser }) => {
                           <div className="row">
                             <div className="col d-flex flex-column gap-1 text-muted">
                               <div className="m-0 px-2 d-flex justify-content-between">
-                                <Card.Text>
+                                <Card.Text
+                                  style={{
+                                    fontSize: "clamp(0.75rem, 1vw, 1rem)",
+                                  }}
+                                >
                                   Time In: {formatTimeToAMPM(log.time_in)}
                                 </Card.Text>
                               </div>
                               <div className="m-0 px-2 d-flex align-items-center">
                                 <div className="me-auto">
-                                  <Card.Text>
+                                  <Card.Text
+                                    style={{
+                                      fontSize: "clamp(0.75rem, 1vw, 1rem)",
+                                    }}
+                                  >
                                     Time Out: {formatTimeToAMPM(log.time_out)}
                                   </Card.Text>
                                 </div>
                                 <div>
-                                  <Card.Text className="text-success fw-bold text-nowrap d-flex justify-content-center align-items-center">
+                                  <Card.Text
+                                    style={{
+                                      fontSize: "clamp(0.75rem, 1vw, 1rem)",
+                                    }}
+                                    className="text-success fw-bold text-nowrap d-flex justify-content-center align-items-center"
+                                  >
                                     <i className="bx bx-plus fs-6 lh-1"></i>
                                     {log.total_hours_today}{" "}
                                     {log.total_hours_today > 1
