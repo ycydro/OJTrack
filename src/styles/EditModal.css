@@ -1,0 +1,8 @@
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+/* For Chrome, Safari, Edge */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Turns black icon to white */
+}

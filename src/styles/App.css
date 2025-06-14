@@ -1,0 +1,39 @@
+.underline-hover:hover {
+  text-decoration: underline;
+}
+
+.label,
+.number {
+  font-size: 1.5rem;
+}
+
+.labelScoreContainer,
+.labelDarkTheme {
+  margin: 0 !important;
+  padding-bottom: 1rem !important;
+}
+
+.progressFill,
+.glowingEffect {
+  padding: 0.5rem !important;
+}
+
+.progressTrack {
+  padding: 0.435rem !important;
+}
+
+.scrollable-contents::-webkit-scrollbar {
+  width: 3px !important;
+  height: 20px !important;
+}
+
+.scrollable-contents::-webkit-scrollbar-thumb {
+  background-color: #cecece !important;
+}
+
+@media only screen and (max-width: 700px) {
+  .label,
+  .number {
+    font-size: 1rem;
+  }
+}
