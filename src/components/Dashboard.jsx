@@ -48,10 +48,8 @@ const Dashboard = ({ user, setUser }) => {
         if (insertError) throw insertError;
 
         setHoursRequired(0);
-        console.log("Inserted default required hours (0)");
       } else {
         setHoursRequired(data[0].hours_required);
-        console.log(data[0].hours_required, "this is the required hours");
       }
     } catch (error) {
       console.error("Error fetching or inserting time log:", error.message);
@@ -262,8 +260,6 @@ const Dashboard = ({ user, setUser }) => {
       return a + (log.total_hours_today || 0);
     }, 0);
 
-    console.log(timeLogs, `This is time logs array`);
-    console.log("Total cumulative hours:", getCumulativeHours);
     setCumulativeHours(getCumulativeHours.toFixed(2));
   }, [timeLogs]);
 

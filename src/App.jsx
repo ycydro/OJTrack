@@ -11,7 +11,6 @@ const App = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log(session);
       setSession(session);
     });
 
