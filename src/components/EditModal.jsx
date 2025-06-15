@@ -122,16 +122,15 @@ const EditModal = ({
           closeButton
           className="border-secondary bg-dark"
         >
-          <Modal.Title className="text-white">Modal heading</Modal.Title>
+          <Modal.Title className="text-white">
+            Edit Time Log for {dayjs(log?.date).format("MMM DD, YYYY")}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-dark">
           <Card bg="dark" className="border-0 rounded-3">
-            <Card.Body
-              className="p-0 d-flex flex-column gap-5 justify-content-center align-items-center"
-              style={{ minHeight: "28rem" }}
-            >
+            <Card.Body className="p-0 d-flex flex-column gap-5 justify-content-center align-items-center">
               <div
-                className="d-flex flex-column justify-content-center align-items-center p-4"
+                className="d-flex flex-column justify-content-center align-items-center p-2"
                 style={{ width: "90%" }}
               >
                 <Form className="w-100 text-white p-3" onSubmit={handleEdit}>
@@ -167,23 +166,13 @@ const EditModal = ({
                       className="bg-dark text-white border-secondary"
                     />
                   </Form.Group>
-                  <div>
-                    <Button
-                      onClick={handleEdit}
-                      className="w-100 h-auto mt-5"
-                      type="submit"
-                    >
-                      Edit Log
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      onClick={handleCloseModal}
-                      className="w-100 h-auto mt-2"
-                      type="button"
-                    >
-                      Cancel
-                    </Button>
-                  </div>
+                  <Button
+                    onClick={handleEdit}
+                    className="w-100 h-auto mt-5"
+                    type="submit"
+                  >
+                    Confirm Edit
+                  </Button>
                 </Form>
               </div>
             </Card.Body>

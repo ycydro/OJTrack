@@ -11,6 +11,7 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import InsertHoursRequired from "./InsertHoursRequired";
 import EditModal from "./EditModal";
+import EditTotalHoursModal from "./EditTotalHoursModal";
 
 const Dashboard = ({ user, setUser }) => {
   const [formData, setFormData] = useState({
@@ -23,6 +24,7 @@ const Dashboard = ({ user, setUser }) => {
   const [isHoursRequiredLoading, setIsHoursRequiredLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showEditTotalHoursModal, setShowEditTotalHoursModal] = useState(false);
   const [logToEdit, setLogToEdit] = useState(null);
   const [timeLogs, setTimeLogs] = useState([]);
   const [cumulativeHours, setCumulativeHours] = useState(0);
@@ -240,6 +242,14 @@ const Dashboard = ({ user, setUser }) => {
     }
   };
 
+  const handleShowEditHours = () => {
+    setShowEditTotalHoursModal(true);
+  };
+
+  const handleCloseEditHours = () => {
+    setShowEditTotalHoursModal(false);
+  };
+
   const handleShowModal = (log) => {
     setLogToEdit(log);
     setShowEditModal(true);
@@ -344,7 +354,24 @@ const Dashboard = ({ user, setUser }) => {
                   style={{ fontSize: "clamp(1rem, 4vw, 2.5rem)" }}
                 >
                   {parseFloat(cumulativeHours)} out of{" "}
-                  {isHoursRequiredLoading ? <Spinner /> : hoursRequired} hours
+                  {isHoursRequiredLoading ? (
+                    <Spinner />
+                  ) : (
+                    <button
+                      className="p-0 border-0 bg-transparent text-white h1"
+                      onClick={handleShowEditHours}
+                      style={{
+                        textDecoration: "underline",
+                        fontSize: "inherit",
+                        fontFamily: "inherit",
+                        cursor: "pointer",
+                        lineHeight: "inherit",
+                      }}
+                    >
+                      {hoursRequired}
+                    </button>
+                  )}{" "}
+                  hours
                 </span>
               </div>
             </div>
@@ -529,13 +556,19 @@ const Dashboard = ({ user, setUser }) => {
           </main>
         </div>
       )}
-
       <EditModal
         show={showEditModal}
         log={logToEdit}
         timeLogs={timeLogs}
         calculateTotalHours={calculateTotalHours}
         handleCloseModal={handleCloseModal}
+      />
+
+      <EditTotalHoursModal
+        show={showEditTotalHoursModal}
+        user={user}
+        fetchHoursRequired={fetchHoursRequired}
+        handleCloseEditHours={handleCloseEditHours}
       />
     </div>
   );
