@@ -11,11 +11,18 @@ import InsertHoursRequired from "./InsertHoursRequired";
 
 const EditTotalHoursModal = ({
   show,
+  hoursRequired,
   user,
   handleCloseEditHours,
   fetchHoursRequired,
 }) => {
-  const [hours, setHours] = useState(0);
+  const [hours, setHours] = useState(hoursRequired || 0);
+
+  useEffect(() => {
+    if (hoursRequired) {
+      setHours(hoursRequired);
+    }
+  }, [hoursRequired]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

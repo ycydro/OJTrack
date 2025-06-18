@@ -20,6 +20,7 @@ const EditModal = ({
     date: log?.date || "",
     time_in: log?.time_in || "",
     time_out: log?.time_out || "",
+    lunch_break: log?.lunch_break || false,
   });
 
   const [logID, setLogID] = useState(log?.id || null);
@@ -30,6 +31,7 @@ const EditModal = ({
         date: log.date || "",
         time_in: log.time_in || "",
         time_out: log.time_out || "",
+        lunch_break: log.lunch_break || false,
       });
 
       setLogID(log.id);
@@ -37,15 +39,42 @@ const EditModal = ({
   }, [log]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
   const handleEdit = async (e) => {
     e.preventDefault();
+
+    const originalLogData = {
+      date: log?.date || "",
+      time_in: log?.time_in || "",
+      time_out: log?.time_out || "",
+      lunch_break: log?.lunch_break || false,
+    };
+
+    const isUnchanged =
+      formData.date === originalLogData.date &&
+      formData.time_in === originalLogData.time_in &&
+      formData.time_out === originalLogData.time_out &&
+      formData.lunch_break === originalLogData.lunch_break;
+
+    if (isUnchanged) {
+      Swal.fire({
+        title: "No Changes!",
+        text: "No values have been changed.",
+        color: "#ffffff",
+        background: "#1a1a1a",
+        icon: "info",
+        customClass: {
+          confirmButton: "primary-swal-button",
+        },
+      });
+      return;
+    }
 
     if (
       timeLogs.some((log) => formData.date === log.date && log.id !== logID)
@@ -58,13 +87,17 @@ const EditModal = ({
         color: "#ffffff",
         background: "#1a1a1a",
         icon: "error",
+        customClass: {
+          confirmButton: "primary-swal-button",
+        },
       });
       return;
     }
 
     const total_hours_today = calculateTotalHours(
       formData.time_in,
-      formData.time_out
+      formData.time_out,
+      formData.lunch_break
     );
 
     if (total_hours_today <= 0) {
@@ -86,6 +119,7 @@ const EditModal = ({
           date: formData.date,
           time_in: formData.time_in,
           time_out: formData.time_out,
+          lunch_break: formData.lunch_break,
           total_hours_today: total_hours_today,
         })
         .eq("id", logID);
@@ -99,6 +133,9 @@ const EditModal = ({
         color: "#ffffff",
         background: "#1a1a1a",
         timer: 2000,
+        customClass: {
+          confirmButton: "primary-swal-button",
+        },
       });
 
       setLogID(null);
@@ -115,33 +152,47 @@ const EditModal = ({
         onHide={handleCloseModal}
         aria-labelledby="contained-modal-title-vcenter"
         centered
-        contentClassName="bg-dark text-white" // This sets the modal content background
+        contentClassName="text-white"
       >
         <Modal.Header
           closeVariant="white"
           closeButton
-          className="border-secondary bg-dark"
+          className="border-secondary"
+          style={{
+            backgroundColor: "#1a1a1a",
+          }}
         >
           <Modal.Title className="text-white">
             Edit Time Log for {dayjs(log?.date).format("MMM DD, YYYY")}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="bg-dark">
-          <Card bg="dark" className="border-0 rounded-3">
+        <Modal.Body
+          style={{
+            backgroundColor: "#1a1a1a",
+          }}
+        >
+          <Card
+            style={{
+              backgroundColor: "#1a1a1a",
+            }}
+            className="border-0 rounded-3"
+          >
             <Card.Body className="p-0 d-flex flex-column gap-5 justify-content-center align-items-center">
               <div
                 className="d-flex flex-column justify-content-center align-items-center p-2"
                 style={{ width: "90%" }}
               >
-                <Form className="w-100 text-white p-3" onSubmit={handleEdit}>
+                <Form
+                  className="w-100 text-white p-3 d-flex flex-column gap-3"
+                  onSubmit={handleEdit}
+                >
                   <Form.Group className="mb-1">
                     <Form.Label>Date</Form.Label>
                     <Form.Control
                       type="date"
                       name="date"
-                      value={formData?.date}
+                      value={formData.date}
                       onChange={handleInputChange}
-                      className="bg-dark text-white border-secondary"
                     />
                   </Form.Group>
                   <Form.Group className="mb-1">
@@ -149,10 +200,9 @@ const EditModal = ({
                     <Form.Control
                       type="time"
                       name="time_in"
-                      value={formData?.time_in}
+                      value={formData.time_in}
                       onChange={handleInputChange}
                       required
-                      className="bg-dark text-white border-secondary"
                     />
                   </Form.Group>
                   <Form.Group className="mb-1">
@@ -160,17 +210,22 @@ const EditModal = ({
                     <Form.Control
                       type="time"
                       name="time_out"
-                      value={formData?.time_out}
+                      value={formData.time_out}
                       onChange={handleInputChange}
                       required
-                      className="bg-dark text-white border-secondary"
                     />
                   </Form.Group>
-                  <Button
-                    onClick={handleEdit}
-                    className="w-100 h-auto mt-5"
-                    type="submit"
-                  >
+                  <Form.Group>
+                    <Form.Check
+                      type="switch"
+                      name="lunch_break"
+                      id="lunch_break"
+                      label="Lunch Break"
+                      checked={formData.lunch_break}
+                      onChange={handleInputChange}
+                    />
+                  </Form.Group>
+                  <Button onClick={handleEdit} className="w-100">
                     Confirm Edit
                   </Button>
                 </Form>

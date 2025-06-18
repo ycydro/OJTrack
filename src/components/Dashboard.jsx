@@ -18,8 +18,8 @@ const Dashboard = ({ user, setUser }) => {
     date: new Date().toISOString().split("T")[0],
     time_in: "",
     time_out: "",
+    lunch_break: false,
   });
-
   const [isLoading, setIsLoading] = useState(true);
   const [isHoursRequiredLoading, setIsHoursRequiredLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -97,10 +97,10 @@ const Dashboard = ({ user, setUser }) => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -116,14 +116,16 @@ const Dashboard = ({ user, setUser }) => {
     });
   };
 
-  const calculateTotalHours = (timeIn, timeOut) => {
+  const calculateTotalHours = (timeIn, timeOut, lunchBreak) => {
     if (!timeIn || !timeOut) return 0;
 
     const [inHours, inMinutes] = timeIn.split(":").map(Number);
     const [outHours, outMinutes] = timeOut.split(":").map(Number);
 
-    const totalMinutes =
-      outHours * 60 + outMinutes - (inHours * 60 + inMinutes);
+    const totalMinutes = lunchBreak
+      ? outHours * 60 + outMinutes - (inHours * 60 + inMinutes) - 60
+      : outHours * 60 + outMinutes - (inHours * 60 + inMinutes);
+
     return (totalMinutes / 60).toFixed(2);
   };
 
@@ -143,13 +145,17 @@ const Dashboard = ({ user, setUser }) => {
           icon: "error",
           color: "#ffffff",
           background: "#1a1a1a",
+          customClass: {
+            confirmButton: "primary-swal-button",
+          },
         });
         return;
       }
 
       const total_hours_today = calculateTotalHours(
         formData.time_in,
-        formData.time_out
+        formData.time_out,
+        formData.lunch_break
       );
 
       if (total_hours_today <= 0) {
@@ -160,42 +166,47 @@ const Dashboard = ({ user, setUser }) => {
           color: "#ffffff",
           background: "#1a1a1a",
           timer: 2000,
+          customClass: {
+            confirmButton: "primary-swal-button",
+          },
         });
         return;
       }
 
-      const { error } = await supabase
-        .from("time_logs")
-        .insert({
-          user_id: user.id,
-          date: formData.date,
-          time_in: formData.time_in,
-          time_out: formData.time_out,
-          total_hours_today: total_hours_today,
-        })
-        .select();
+      const { error } = await supabase.from("time_logs").insert({
+        user_id: user.id,
+        date: formData.date,
+        time_in: formData.time_in,
+        time_out: formData.time_out,
+        lunch_break: formData.lunch_break,
+        total_hours_today: total_hours_today,
+      });
 
       if (error) throw error;
 
       Swal.fire({
         title: "Success!",
-        text: "Successfuly logged time!",
+        text: "Successfully  logged time!",
         icon: "success",
         color: "#ffffff",
         background: "#1a1a1a",
         timer: 2000,
+        customClass: {
+          confirmButton: "primary-swal-button",
+        },
       });
 
       setFormData({
         date: new Date().toISOString().split("T")[0],
         time_in: "",
         time_out: "",
+        lunch_break: false,
       });
+      fetchTimeLogs();
     } catch (error) {
       console.error("Error adding time log:", error.message);
       alert("Error adding time log: " + error.message);
     } finally {
-      fetchTimeLogs();
       setIsSubmitting(false);
     }
   };
@@ -211,6 +222,9 @@ const Dashboard = ({ user, setUser }) => {
         showCancelButton: true,
         confirmButtonText: "Yes, delete it!",
         cancelButtonText: "Cancel",
+        customClass: {
+          confirmButton: "primary-swal-button",
+        },
       });
 
       if (!result.isConfirmed) return;
@@ -226,6 +240,9 @@ const Dashboard = ({ user, setUser }) => {
         color: "#ffffff",
         background: "#1a1a1a",
         timer: 2000,
+        customClass: {
+          confirmButton: "primary-swal-button",
+        },
       });
 
       fetchTimeLogs();
@@ -238,6 +255,9 @@ const Dashboard = ({ user, setUser }) => {
         color: "#ffffff",
         background: "#1a1a1a",
         timer: 2000,
+        customClass: {
+          confirmButton: "primary-swal-button",
+        },
       });
     }
   };
@@ -280,6 +300,10 @@ const Dashboard = ({ user, setUser }) => {
 
     setProgressPercentage(calculateProgressPercentage());
   }, [cumulativeHours, hoursRequired]);
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   return (
     <div
@@ -358,14 +382,10 @@ const Dashboard = ({ user, setUser }) => {
                     <Spinner />
                   ) : (
                     <button
-                      className="p-0 border-0 bg-transparent text-white h1"
+                      className="p-0 border-0 bg-transparent btn-text text-white h1"
                       onClick={handleShowEditHours}
                       style={{
-                        textDecoration: "underline",
-                        fontSize: "inherit",
                         fontFamily: "inherit",
-                        cursor: "pointer",
-                        lineHeight: "inherit",
                       }}
                     >
                       {hoursRequired}
@@ -391,7 +411,7 @@ const Dashboard = ({ user, setUser }) => {
                     }}
                   >
                     <Form
-                      className="w-100 text-white p-3"
+                      className="w-100 text-white p-3 d-flex flex-column gap-3"
                       onSubmit={handleSubmit}
                     >
                       <Form.Group className="mb-1">
@@ -423,8 +443,18 @@ const Dashboard = ({ user, setUser }) => {
                           required
                         />
                       </Form.Group>
+                      <Form.Group>
+                        <Form.Check
+                          type="switch"
+                          name="lunch_break"
+                          id="lunch_break"
+                          label="Lunch Break"
+                          checked={formData.lunch_break}
+                          onChange={handleInputChange}
+                        />
+                      </Form.Group>
                       <Button
-                        className="w-100 h-auto mt-5"
+                        className="w-100 h-auto mt-3"
                         type="submit"
                         disabled={isSubmitting}
                       >
@@ -510,18 +540,34 @@ const Dashboard = ({ user, setUser }) => {
                         <Card.Body className="p-1 bg-transparent">
                           <div className="row">
                             <div className="col d-flex flex-column gap-1 text-muted">
-                              <div className="m-0 px-2 d-flex justify-content-between">
+                              {/* Time In row with Lunch Break indicator */}
+                              <div className="m-0 px-2 d-flex justify-content-between align-items-center">
                                 <Card.Text
+                                  className="p-0 m-0"
                                   style={{
                                     fontSize: "clamp(0.75rem, 1vw, 1rem)",
                                   }}
                                 >
                                   Time In: {formatTimeToAMPM(log.time_in)}
                                 </Card.Text>
+                                {log.lunch_break && (
+                                  <Card.Text
+                                    className="p-0 m-0 d-flex align-items-center"
+                                    style={{
+                                      fontSize: "clamp(0.75rem, 1vw, 1rem)",
+                                    }}
+                                  >
+                                    <i className="bx bx-restaurant me-1"></i>
+                                    <span>Lunch Break</span>
+                                  </Card.Text>
+                                )}
                               </div>
+
+                              {/* Time Out and Hours row */}
                               <div className="m-0 px-2 d-flex align-items-center">
                                 <div className="me-auto">
                                   <Card.Text
+                                    className="m-0"
                                     style={{
                                       fontSize: "clamp(0.75rem, 1vw, 1rem)",
                                     }}
@@ -531,12 +577,12 @@ const Dashboard = ({ user, setUser }) => {
                                 </div>
                                 <div>
                                   <Card.Text
+                                    className="text-success fw-bold text-nowrap d-flex align-items-center m-0"
                                     style={{
                                       fontSize: "clamp(0.75rem, 1vw, 1rem)",
                                     }}
-                                    className="text-success fw-bold text-nowrap d-flex justify-content-center align-items-center"
                                   >
-                                    <i className="bx bx-plus fs-6 lh-1"></i>
+                                    <i className="bx bx-plus fs-6 me-1"></i>
                                     {log.total_hours_today}{" "}
                                     {log.total_hours_today > 1
                                       ? "Hours"
@@ -566,6 +612,7 @@ const Dashboard = ({ user, setUser }) => {
 
       <EditTotalHoursModal
         show={showEditTotalHoursModal}
+        hoursRequired={hoursRequired}
         user={user}
         fetchHoursRequired={fetchHoursRequired}
         handleCloseEditHours={handleCloseEditHours}
