@@ -102,12 +102,15 @@ const EditModal = ({
 
     if (total_hours_today <= 0) {
       Swal.fire({
-        title: "Error!",
-        text: `${total_hours_today} hours is an invalid time.`,
-        icon: "error",
+        title: "Oops!",
+        text: `You can't log zero or negative hours.`,
+        icon: "warning",
         color: "#ffffff",
         background: "#1a1a1a",
         timer: 2000,
+        customClass: {
+          confirmButton: "primary-swal-button",
+        },
       });
       return;
     }
