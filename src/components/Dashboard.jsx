@@ -303,9 +303,9 @@ const Dashboard = ({ user, setUser }) => {
     setProgressPercentage(calculateProgressPercentage());
   }, [cumulativeHours, hoursRequired]);
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
+  // useEffect(() => {
+  //   console.log(formData);
+  // }, [formData]);
 
   return (
     <div
