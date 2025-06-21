@@ -1,7 +1,0 @@
-input[type="time"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-}
-
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-}

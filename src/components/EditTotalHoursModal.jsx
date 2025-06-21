@@ -6,7 +6,6 @@ import "boxicons";
 import "boxicons/css/boxicons.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/App.css";
-import "../styles/EditModal.css";
 import InsertHoursRequired from "./InsertHoursRequired";
 
 const EditTotalHoursModal = ({
