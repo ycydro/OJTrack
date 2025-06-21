@@ -89,6 +89,21 @@ const Dashboard = ({ user, setUser }) => {
 
   const signOut = async () => {
     try {
+      const result = await Swal.fire({
+        title: "Sign Out",
+        text: "Are you sure you want to sign out?",
+        icon: "warning",
+        color: "#ffffff",
+        background: "#1a1a1a",
+        showCancelButton: true,
+        confirmButtonText: "Yes, sign out!",
+        cancelButtonText: "Cancel",
+        customClass: {
+          confirmButton: "primary-swal-button",
+        },
+      });
+
+      if (!result.isConfirmed) return;
       const { error } = await supabase.auth.signOut();
 
       if (error) throw error;
