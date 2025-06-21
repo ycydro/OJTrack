@@ -14,7 +14,7 @@ import Navs from "./Navs";
 import EditModal from "./EditModal";
 import EditTotalHoursModal from "./EditTotalHoursModal";
 import ShinyText from "./ShinyText";
-import formatTimeToAMPM from "../utils/formatTimetoAMPM";
+import formatTimeToAMPM from "../utils/formatTimeToAMPM";
 import calculateTotalHours from "../utils/calculateTotalHours";
 
 const Dashboard = ({ user, setUser }) => {
