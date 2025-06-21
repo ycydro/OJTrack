@@ -1,6 +1,6 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import formatTimeToAMPM from "./formatTimetoAMPM";
+import formatTimeToAMPM from "./formatTimeToAMPM";
 
 const exporTimeLogsToPDF = (data) => {
   const doc = new jsPDF();
