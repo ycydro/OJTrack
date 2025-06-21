@@ -6,15 +6,10 @@ import { Form, Card, Button, Modal } from "react-bootstrap";
 import "boxicons";
 import "boxicons/css/boxicons.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import calculateTotalHours from "../utils/calculateTotalHours";
 import "../styles/App.css";
 
-const EditModal = ({
-  show,
-  timeLogs,
-  log,
-  handleCloseModal,
-  calculateTotalHours,
-}) => {
+const EditModal = ({ show, timeLogs, log, handleCloseModal }) => {
   const [formData, setFormData] = useState({
     date: log?.date || "",
     time_in: log?.time_in || "",

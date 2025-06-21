@@ -21,7 +21,7 @@ const Login = () => {
             variables: {
               default: {
                 colors: {
-                  brand: "#4285F4", // Google blue
+                  brand: "#4285F4",
                   brandAccent: "#3367D6",
                 },
               },

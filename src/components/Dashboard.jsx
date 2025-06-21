@@ -14,6 +14,8 @@ import Navs from "./Navs";
 import EditModal from "./EditModal";
 import EditTotalHoursModal from "./EditTotalHoursModal";
 import ShinyText from "./ShinyText";
+import formatTimeToAMPM from "../utils/formatTimetoAMPM";
+import calculateTotalHours from "../utils/calculateTotalHours";
 
 const Dashboard = ({ user, setUser }) => {
   const [formData, setFormData] = useState({
@@ -119,31 +121,6 @@ const Dashboard = ({ user, setUser }) => {
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
-  };
-
-  const formatTimeToAMPM = (timeString) => {
-    const [hours, minutes, seconds] = timeString.split(":");
-    const date = new Date();
-    date.setHours(+hours, +minutes, +seconds);
-
-    return date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
-
-  const calculateTotalHours = (timeIn, timeOut, lunchBreak) => {
-    if (!timeIn || !timeOut) return 0;
-
-    const [inHours, inMinutes] = timeIn.split(":").map(Number);
-    const [outHours, outMinutes] = timeOut.split(":").map(Number);
-
-    const totalMinutes = lunchBreak
-      ? outHours * 60 + outMinutes - (inHours * 60 + inMinutes) - 60
-      : outHours * 60 + outMinutes - (inHours * 60 + inMinutes);
-
-    return (totalMinutes / 60).toFixed(2);
   };
 
   const handleSubmit = async (e) => {
@@ -308,6 +285,7 @@ const Dashboard = ({ user, setUser }) => {
     }, 0);
 
     setCumulativeHours(getCumulativeHours.toFixed(2));
+    // console.log(timeLogs);
   }, [timeLogs]);
 
   useEffect(() => {
@@ -337,7 +315,7 @@ const Dashboard = ({ user, setUser }) => {
       ) : (
         <div className="mt-3 pb-1 container-fluid w-75 w-md-100 px-md-3 h-auto">
           <header className="mb-3 postion-sticky">
-            <Navs user={user} signOut={signOut} />
+            <Navs user={user} signOut={signOut} timeLogs={timeLogs} />
           </header>
           {/* <header className="row py-3">
             <div className="col-8">
@@ -639,7 +617,6 @@ const Dashboard = ({ user, setUser }) => {
         show={showEditModal}
         log={logToEdit}
         timeLogs={timeLogs}
-        calculateTotalHours={calculateTotalHours}
         handleCloseModal={handleCloseModal}
       />
 
