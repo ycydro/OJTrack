@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import formatTimeToAMPM from "./formatTimetoAMPM";
+import formatTimeToAMPM from "./formatTimeToAMPM";
 
 const exportTimeLogsToExcel = (data) => {
   const options = { year: "numeric", month: "long", day: "numeric" };
