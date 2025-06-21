@@ -1,0 +1,114 @@
+.glassmorphism-container {
+  margin-bottom: 1.5rem !important;
+  padding: 0 !important;
+  border-radius: 2rem !important;
+}
+
+.glassmorphism-navbar {
+  background: transparent;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  padding: 0.05rem 0.15rem !important;
+  position: relative !important;
+}
+
+.gradient-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.gradient-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1.5px;
+  width: 100%;
+  background: linear-gradient(90deg, #0d6efd, #4facfe, #0d6efd);
+  background-size: 200% auto;
+  animation: underlineMove 1s linear infinite;
+}
+
+.navbar-content {
+  display: flex !important ;
+  justify-content: space-between !important ;
+  align-items: center !important ;
+  position: relative !important ;
+  z-index: 1 !important ;
+}
+
+.navbar-brand {
+  font-size: 1.5rem !important ;
+  font-weight: bold !important ;
+  color: #ffffff !important ;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important ;
+}
+
+.navbar-end {
+  display: flex !important ;
+  align-items: center !important ;
+}
+
+.dropdown-container {
+  position: relative !important ;
+}
+
+.sign-out-button {
+  background: rgba(255, 255, 255, 0.1) !important ;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important ;
+  border-radius: 12px !important ;
+  color: #ffffff !important ;
+  padding: 0.75rem 1.25rem !important ;
+  font-size: 0.95rem !important ;
+  cursor: pointer !important ;
+  transition: all 0.3s ease !important ;
+  backdrop-filter: blur(5px) !important ;
+  -webkit-backdrop-filter: blur(5px) !important ;
+  display: flex !important ;
+  align-items: center !important ;
+  gap: 0.5rem !important ;
+}
+
+.sign-out-button:hover {
+  background: rgba(255, 255, 255, 0.15) !important ;
+  border-color: rgba(255, 255, 255, 0.3) !important ;
+  transform: translateY(-1px) !important ;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important ;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0 !important ;
+    transform: translateY(-10px) !important ;
+  }
+  to {
+    opacity: 1 !important ;
+    transform: translateY(0) !important ;
+  }
+}
+
+@keyframes underlineMove {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+@media (max-width: 768px) {
+  .glassmorphism-navbar {
+    padding: 0.5rem 0.75rem !important ;
+  }
+
+  .navbar-brand {
+    font-size: 0.975rem !important ;
+  }
+
+  .sign-out-button {
+    padding: 0.35rem 0.45rem !important ;
+    font-size: 1rem !important ;
+  }
+}

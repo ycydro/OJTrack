@@ -26,6 +26,36 @@
   background-color: #0b5ed7 !important;
 }
 
+.transparent-bg {
+  background: transparent !important;
+}
+
+.gradient-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.gradient-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1.5px;
+  width: 100%;
+  background: linear-gradient(90deg, #0d6efd, #4facfe, #0d6efd);
+  background-size: 200% auto;
+  animation: underlineMove 2s linear infinite;
+}
+
+@keyframes underlineMove {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
 @media only screen and (max-width: 700px) {
   .label,
   .number {

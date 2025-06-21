@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { supabase } from "../lib/helper/supabaseClient";
 import dayjs from "dayjs";
-import { Form, Card, Button, Spinner } from "react-bootstrap";
+import { Form, Card, Button, Spinner, Nav } from "react-bootstrap";
 import "boxicons";
 import "boxicons/css/boxicons.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -10,8 +10,10 @@ import "../styles/App.css";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import InsertHoursRequired from "./InsertHoursRequired";
+import Navs from "./Navs";
 import EditModal from "./EditModal";
 import EditTotalHoursModal from "./EditTotalHoursModal";
+import ShinyText from "./ShinyText";
 
 const Dashboard = ({ user, setUser }) => {
   const [formData, setFormData] = useState({
@@ -319,7 +321,10 @@ const Dashboard = ({ user, setUser }) => {
         </div>
       ) : (
         <div className="mt-3 pb-1 container-fluid w-75 w-md-100 px-md-3 h-auto">
-          <header className="row py-3">
+          <header className="mb-3 postion-sticky">
+            <Navs user={user} signOut={signOut} />
+          </header>
+          {/* <header className="row py-3">
             <div className="col-8">
               <p className="m-0">
                 Welcome, {user?.user_metadata?.full_name.split(" ")[0]}!
@@ -333,7 +338,7 @@ const Dashboard = ({ user, setUser }) => {
                 Sign Out
               </button>
             </div>
-          </header>
+          </header> */}
 
           <section className="container-fluid px-0">
             <div className="row align-items-center justify-content-center gap-4">
@@ -388,7 +393,20 @@ const Dashboard = ({ user, setUser }) => {
                         fontFamily: "inherit",
                       }}
                     >
-                      {hoursRequired}
+                      <ShinyText
+                        colors={[
+                          "#40ffaa",
+                          "#4079ff",
+                          "#40ffaa",
+                          "#4079ff",
+                          "#40ffaa",
+                        ]}
+                        animationSpeed={5}
+                        showBorder={false}
+                        className="custom-class"
+                      >
+                        {hoursRequired}
+                      </ShinyText>
                     </button>
                   )}{" "}
                   hours
@@ -399,7 +417,7 @@ const Dashboard = ({ user, setUser }) => {
 
           <main className="row gap-4 my-4 flex-md-row flex-column">
             <div className="col container-fluid border border-light-subtle rounded-3 p-0 shadow">
-              <Card bg="dark" className="border-0 rounded-3">
+              <Card bg="dark" className="border-0 rounded-3 transparent-bg">
                 <Card.Body
                   className="p-0 d-flex flex-column gap-5 justify-content-center align-items-center"
                   style={{ minHeight: "28rem" }}
@@ -469,7 +487,7 @@ const Dashboard = ({ user, setUser }) => {
             <div className="col container-fluid border border-light-subtle rounded-3 p-0 shadow mt-3 mt-md-0">
               <Card
                 bg="dark"
-                className="border-0 rounded-3"
+                className="border-0 rounded-3 transparent-bg"
                 style={{
                   minHeight: "28rem",
                   maxHeight: "28rem",
@@ -537,7 +555,7 @@ const Dashboard = ({ user, setUser }) => {
                             </div>
                           </div>
                         </Card.Header>
-                        <Card.Body className="p-1 bg-transparent">
+                        <Card.Body className="p-1">
                           <div className="row">
                             <div className="col d-flex flex-column gap-1 text-muted">
                               {/* Time In row with Lunch Break indicator */}
