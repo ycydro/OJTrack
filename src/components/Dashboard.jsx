@@ -26,7 +26,9 @@ const Dashboard = ({ user, setUser }) => {
     time_in: "",
     time_out: "",
     lunch_break: false,
+    specified_hours: 0,
   });
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isHoursRequiredLoading, setIsHoursRequiredLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -149,11 +151,14 @@ const Dashboard = ({ user, setUser }) => {
         return;
       }
 
-      const total_hours_today = calculateTotalHours(
-        formData.time_in,
-        formData.time_out,
-        formData.lunch_break
-      );
+      // if walang inispecify si user na hours, cacalculate yung time in, time out, saka lunch break (1 hour)
+      const total_hours_today = formData.specified_hours
+        ? formData.specified_hours
+        : calculateTotalHours(
+            formData.time_in,
+            formData.time_out,
+            formData.lunch_break
+          );
 
       if (total_hours_today <= 0) {
         Swal.fire({
@@ -177,6 +182,7 @@ const Dashboard = ({ user, setUser }) => {
         time_out: formData.time_out,
         lunch_break: formData.lunch_break,
         total_hours_today: total_hours_today,
+        specified_hours: formData.specified_hours,
       });
 
       if (error) throw error;
@@ -199,7 +205,12 @@ const Dashboard = ({ user, setUser }) => {
         time_in: "",
         time_out: "",
         lunch_break: false,
+        specified_hours: 0,
       });
+
+      // reset specified hours input value to empty string but its really 0
+      showAdvanced && (document.getElementById("specified_hours").value = "");
+
       fetchTimeLogs();
     } catch (error) {
       console.error("Error adding time log:", error.message);
@@ -260,7 +271,7 @@ const Dashboard = ({ user, setUser }) => {
     }
   };
 
-  const handleDeleteAll = async (id) => {
+  const handleDeleteAll = async () => {
     try {
       if (timeLogs.length <= 0) {
         Swal.fire({
@@ -276,6 +287,7 @@ const Dashboard = ({ user, setUser }) => {
         });
         return;
       }
+
       const result = await Swal.fire({
         title: "Delete all time logs?",
         text: "You won't be able to revert this!",
@@ -484,9 +496,7 @@ const Dashboard = ({ user, setUser }) => {
                 >
                   <div
                     className="d-flex flex-column justify-content-center align-items-center p-4"
-                    style={{
-                      width: "90%",
-                    }}
+                    style={{ width: "90%" }}
                   >
                     <Form
                       className="w-100 text-white p-3 d-flex flex-column gap-3"
@@ -522,27 +532,69 @@ const Dashboard = ({ user, setUser }) => {
                         />
                       </Form.Group>
 
-                      <Form.Group>
-                        <OverlayTrigger
-                          placement="left"
-                          overlay={
-                            <Tooltip id="button-tooltip-2">
-                              Decrease an hour
-                            </Tooltip>
-                          }
+                      <div className="w-100">
+                        <div
+                          className="text-primary mb-2 d-flex align-items-center gap-2"
+                          onClick={() => {
+                            // scrolls down only when opening.
+                            const wasClosed = !showAdvanced;
+                            setShowAdvanced(!showAdvanced);
+
+                            setTimeout(() => {
+                              if (wasClosed) {
+                                window.scrollTo({
+                                  top: 325,
+                                  behavior: "smooth",
+                                });
+                              }
+                            }, 75);
+                          }}
+                          style={{ userSelect: "none", cursor: "pointer" }}
                         >
-                          <Form.Check
-                            type="switch"
-                            name="lunch_break"
-                            id="lunch_break"
-                            label="Lunch Break"
-                            checked={formData.lunch_break}
-                            onChange={handleInputChange}
-                          />
-                        </OverlayTrigger>
-                      </Form.Group>
+                          <span>
+                            {showAdvanced ? "Hide options" : "More options..."}
+                          </span>
+                          <i
+                            className={`bi bi-chevron-${
+                              showAdvanced ? "up" : "down"
+                            }`}
+                          ></i>
+                        </div>
+
+                        {showAdvanced && (
+                          <div className="pt-3 mt-1">
+                            <Form.Group className="mb-3">
+                              <Form.Check
+                                type="switch"
+                                name="lunch_break"
+                                id="lunch_break"
+                                label="Lunch Break"
+                                checked={formData.lunch_break}
+                                onChange={handleInputChange}
+                              />
+                            </Form.Group>
+                            <Form.Group className="d-flex flex-column gap-1">
+                              <Form.Label>
+                                Specify total hours worked:
+                              </Form.Label>
+                              <Form.Control
+                                type="number"
+                                step="0.25"
+                                placeholder="e.g. 8"
+                                id="specified_hours"
+                                name="specified_hours"
+                                onChange={handleInputChange}
+                              />
+                              <Form.Text className="text-white-50">
+                                Leave blank to calculate automatically
+                              </Form.Text>
+                            </Form.Group>
+                          </div>
+                        )}
+                      </div>
+
                       <Button
-                        className="w-100 h-auto mt-3"
+                        className="w-100 h-auto mt-2"
                         type="submit"
                         disabled={isSubmitting}
                       >
@@ -579,12 +631,12 @@ const Dashboard = ({ user, setUser }) => {
 
               <Card
                 className="border-0 transparent-bg"
-                style={{
-                  minHeight: "28rem",
-                  maxHeight: "28rem",
-                }}
+                style={
+                  showAdvanced
+                    ? { height: "auto", minHeight: "28rem", maxHeight: "40rem" }
+                    : { minHeight: "28rem", maxHeight: "28rem" }
+                }
               >
-                {/* Rest of your existing code remains the same */}
                 <Card.Body
                   className={`px-0 py-3 d-flex flex-column gap-2 align-items-center scrollable-contents ${
                     isLoading || timeLogs.length <= 0
@@ -725,6 +777,8 @@ const Dashboard = ({ user, setUser }) => {
         show={showEditModal}
         log={logToEdit}
         timeLogs={timeLogs}
+        showAdvanced={showAdvanced}
+        setShowAdvanced={setShowAdvanced}
         handleCloseModal={handleCloseModal}
       />
 

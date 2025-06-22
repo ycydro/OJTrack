@@ -15,7 +15,10 @@ const EditModal = ({ show, timeLogs, log, handleCloseModal }) => {
     time_in: log?.time_in || "",
     time_out: log?.time_out || "",
     lunch_break: log?.lunch_break || false,
+    specified_hours: log?.specified_hours || 0,
   });
+
+  const [showEditAdvanced, setShowEditAdvanced] = useState(false);
 
   const [logID, setLogID] = useState(log?.id || null);
 
@@ -26,6 +29,7 @@ const EditModal = ({ show, timeLogs, log, handleCloseModal }) => {
         time_in: log.time_in || "",
         time_out: log.time_out || "",
         lunch_break: log.lunch_break || false,
+        specified_hours: log.specified_hours || 0,
       });
 
       setLogID(log.id);
@@ -48,13 +52,15 @@ const EditModal = ({ show, timeLogs, log, handleCloseModal }) => {
       time_in: log?.time_in || "",
       time_out: log?.time_out || "",
       lunch_break: log?.lunch_break || false,
+      specified_hours: log?.specified_hours || 0,
     };
 
     const isUnchanged =
       formData.date === originalLogData.date &&
       formData.time_in === originalLogData.time_in &&
       formData.time_out === originalLogData.time_out &&
-      formData.lunch_break === originalLogData.lunch_break;
+      formData.lunch_break === originalLogData.lunch_break &&
+      formData.specified_hours === originalLogData.specified_hours;
 
     if (isUnchanged) {
       Swal.fire({
@@ -88,11 +94,13 @@ const EditModal = ({ show, timeLogs, log, handleCloseModal }) => {
       return;
     }
 
-    const total_hours_today = calculateTotalHours(
-      formData.time_in,
-      formData.time_out,
-      formData.lunch_break
-    );
+    const total_hours_today = formData.specified_hours
+      ? formData.specified_hours
+      : calculateTotalHours(
+          formData.time_in,
+          formData.time_out,
+          formData.lunch_break
+        );
 
     if (total_hours_today <= 0) {
       Swal.fire({
@@ -118,6 +126,7 @@ const EditModal = ({ show, timeLogs, log, handleCloseModal }) => {
           time_out: formData.time_out,
           lunch_break: formData.lunch_break,
           total_hours_today: total_hours_today,
+          specified_hours: formData.specified_hours,
         })
         .eq("id", logID);
 
@@ -212,16 +221,53 @@ const EditModal = ({ show, timeLogs, log, handleCloseModal }) => {
                       required
                     />
                   </Form.Group>
-                  <Form.Group>
-                    <Form.Check
-                      type="switch"
-                      name="lunch_break"
-                      id="lunch_break"
-                      label="Lunch Break"
-                      checked={formData.lunch_break}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Group>
+
+                  <div className="w-100">
+                    <div
+                      className="text-primary cursor-pointer mb-2 d-flex align-items-center gap-2"
+                      onClick={() => setShowEditAdvanced(!showEditAdvanced)}
+                      style={{ userSelect: "none", cursor: "pointer" }}
+                    >
+                      <span>
+                        {showEditAdvanced ? "Hide options" : "More options..."}
+                      </span>
+                      <i
+                        className={`bi bi-chevron-${
+                          showEditAdvanced ? "up" : "down"
+                        }`}
+                      ></i>
+                    </div>
+
+                    {showEditAdvanced && (
+                      <div className="pt-3 mt-1">
+                        <Form.Group className="mb-3">
+                          <Form.Check
+                            type="switch"
+                            name="lunch_break"
+                            id="lunch_break"
+                            label="Lunch Break"
+                            checked={formData.lunch_break}
+                            onChange={handleInputChange}
+                          />
+                        </Form.Group>
+                        <Form.Group>
+                          <Form.Label>Specify total hours worked:</Form.Label>
+                          <Form.Control
+                            type="number"
+                            step="0.25"
+                            placeholder="e.g. 7.5"
+                            id="specified_hours"
+                            name="specified_hours"
+                            value={formData.specified_hours}
+                            onChange={handleInputChange}
+                          />
+                          <Form.Text className="text-white-50">
+                            Leave blank to calculate automatically
+                          </Form.Text>
+                        </Form.Group>
+                      </div>
+                    )}
+                  </div>
                   <Button onClick={handleEdit} className="w-100">
                     Confirm Edit
                   </Button>

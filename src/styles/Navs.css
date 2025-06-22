@@ -102,6 +102,10 @@
   display: inline;
 }
 
+.export-icon {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .glassmorphism-navbar {
     padding: 0.5rem 0.75rem !important ;
@@ -121,6 +125,10 @@
 
   .export-label {
     display: none !important;
+  }
+
+  .export-icon {
+    display: inline;
   }
 
   .gray-button {

@@ -49,7 +49,7 @@ const Navs = ({ user, signOut, timeLogs }) => {
               <Navbar.Collapse className="gap-2 justify-content-end navbar-end">
                 <Dropdown align="end">
                   <Dropdown.Toggle variant="primary" id="export-dropdown">
-                    <Download size={18} className="me-1" />
+                    <Download size={18} className="me-1 export-icon" />
                     <span className="export-label">Export Time Logs</span>
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
