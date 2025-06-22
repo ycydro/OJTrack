@@ -262,6 +262,20 @@ const Dashboard = ({ user, setUser }) => {
 
   const handleDeleteAll = async (id) => {
     try {
+      if (timeLogs.length <= 0) {
+        Swal.fire({
+          title: "No Time Logs!",
+          text: "No logs to delete!",
+          icon: "error",
+          color: "#ffffff",
+          background: "#1a1a1a",
+          timer: 2000,
+          customClass: {
+            confirmButton: "primary-swal-button",
+          },
+        });
+        return;
+      }
       const result = await Swal.fire({
         title: "Delete all time logs?",
         text: "You won't be able to revert this!",
@@ -422,29 +436,38 @@ const Dashboard = ({ user, setUser }) => {
                   {isHoursRequiredLoading ? (
                     <Spinner />
                   ) : (
-                    <button
-                      className="p-0 border-0 bg-transparent btn-text text-white h1"
-                      onClick={handleShowEditHours}
-                      style={{
-                        fontFamily: "inherit",
-                        fontSize: "inherit",
-                      }}
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={
+                        <Tooltip id="button-tooltip-2">
+                          Change Required Hours
+                        </Tooltip>
+                      }
                     >
-                      <ShinyText
-                        colors={[
-                          "#40ffaa",
-                          "#4079ff",
-                          "#40ffaa",
-                          "#4079ff",
-                          "#40ffaa",
-                        ]}
-                        animationSpeed={5}
-                        showBorder={false}
-                        className="custom-class"
+                      <button
+                        className="p-0 border-0 bg-transparent btn-text text-white h1"
+                        onClick={handleShowEditHours}
+                        style={{
+                          fontFamily: "inherit",
+                          fontSize: "inherit",
+                        }}
                       >
-                        {hoursRequired}
-                      </ShinyText>
-                    </button>
+                        <ShinyText
+                          colors={[
+                            "#40ffaa",
+                            "#4079ff",
+                            "#40ffaa",
+                            "#4079ff",
+                            "#40ffaa",
+                          ]}
+                          animationSpeed={5}
+                          showBorder={false}
+                          className="custom-class"
+                        >
+                          {hoursRequired}
+                        </ShinyText>
+                      </button>
+                    </OverlayTrigger>
                   )}{" "}
                   hours
                 </span>
@@ -498,15 +521,25 @@ const Dashboard = ({ user, setUser }) => {
                           required
                         />
                       </Form.Group>
+
                       <Form.Group>
-                        <Form.Check
-                          type="switch"
-                          name="lunch_break"
-                          id="lunch_break"
-                          label="Lunch Break"
-                          checked={formData.lunch_break}
-                          onChange={handleInputChange}
-                        />
+                        <OverlayTrigger
+                          placement="left"
+                          overlay={
+                            <Tooltip id="button-tooltip-2">
+                              Decrease an hour
+                            </Tooltip>
+                          }
+                        >
+                          <Form.Check
+                            type="switch"
+                            name="lunch_break"
+                            id="lunch_break"
+                            label="Lunch Break"
+                            checked={formData.lunch_break}
+                            onChange={handleInputChange}
+                          />
+                        </OverlayTrigger>
                       </Form.Group>
                       <Button
                         className="w-100 h-auto mt-3"
@@ -525,7 +558,7 @@ const Dashboard = ({ user, setUser }) => {
               <OverlayTrigger
                 placement="top"
                 overlay={
-                  <Tooltip id="button-tooltip-2">Delete all time logs</Tooltip>
+                  <Tooltip id="button-tooltip-2">Delete all Time Logs</Tooltip>
                 }
               >
                 <Button
@@ -604,13 +637,22 @@ const Dashboard = ({ user, setUser }) => {
                               >
                                 <i className="bx bx-edit fs-6 lh-1"></i>
                               </Button>
-                              <Button
-                                type="button"
-                                onClick={() => handleDelete(log.id)}
-                                className="btn btn-sm btn-danger rounded-circle p-1 d-flex align-items-center justify-content-center w-100 h-100"
+                              <OverlayTrigger
+                                placement="bottom"
+                                overlay={
+                                  <Tooltip id="button-tooltip-2">
+                                    Delete Time Log
+                                  </Tooltip>
+                                }
                               >
-                                <i className="bx bx-trash fs-6 lh-1"></i>
-                              </Button>
+                                <Button
+                                  type="button"
+                                  onClick={() => handleDelete(log.id)}
+                                  className="btn btn-sm btn-danger rounded-circle p-1 d-flex align-items-center justify-content-center w-100 h-100"
+                                >
+                                  <i className="bx bx-trash fs-6 lh-1"></i>
+                                </Button>
+                              </OverlayTrigger>
                             </div>
                           </div>
                         </Card.Header>

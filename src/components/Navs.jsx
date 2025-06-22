@@ -6,6 +6,8 @@ import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import { LogOut } from "lucide-react";
 import Dropdown from "react-bootstrap/Dropdown";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import exporTimeLogsToPDF from "../utils/exporTimeLogsToPDF";
 import exportTimeLogsToExcel from "../utils/exportTimeLogsToExcel";
@@ -15,7 +17,7 @@ const Navs = ({ user, signOut, timeLogs }) => {
   const handleExport = (logs, type) => {
     if (logs?.length <= 0) {
       Swal.fire({
-        title: "Error!",
+        title: "No Time Logs!",
         text: "No logs to export!",
         icon: "error",
         color: "#ffffff",
@@ -65,9 +67,14 @@ const Navs = ({ user, signOut, timeLogs }) => {
                 </Dropdown>
 
                 <Navbar.Text>
-                  <Button className="gray-button" onClick={signOut}>
-                    <LogOut color="#0a8efd" />
-                  </Button>
+                  <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip id="button-tooltip-2">Sign Out</Tooltip>}
+                  >
+                    <Button className="gray-button" onClick={signOut}>
+                      <LogOut color="#0a8efd" />
+                    </Button>
+                  </OverlayTrigger>
                 </Navbar.Text>
               </Navbar.Collapse>
             </Container>
