@@ -1,4 +1,4 @@
-⏱️ OJTrack - [Link](https://ojtrack.vercel.app/)
+## ⏱️ OJTrack - [Link](https://ojtrack.vercel.app/)
 
 A simple time logging web app built with **React**, **Vite**, and **Supabase**. This app allows OJT (On-the-Job Training) students to track their daily work hours and export them as PDF or Excel for documentation.
 
