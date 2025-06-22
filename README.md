@@ -1,12 +1,27 @@
-# React + Vite
+# ⏱️ OJTrack
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple time logging web app built with **React**, **Vite**, and **Supabase**. This app allows OJT (On-the-Job Training) students to track their daily work hours and export them as PDF or Excel for documentation.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- 🔐 **Google Login** via Supabase Auth
+- 🕒 **Log Time In / Time Out**
+- 🧮 Automatically computes **Total Hours** (per day & overall)
+- 📤 **Export time logs** to PDF or Excel
+- 📱 **Mobile-responsive UI** (Bootstrap 5 + custom styles)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## ⚙️ Tech Stack
+
+| Tech             | Description                       |
+|------------------|-----------------------------------|
+| React + Vite     | Frontend framework and dev server |
+| Supabase         | Backend as a Service (Auth + DB)  |
+| jsPDF + SheetJS  | Export to PDF and Excel           |
+| Bootstrap        | UI styling and responsive layout  |
+| SweetAlert2      | Alerts and modals                 |
+
+---
