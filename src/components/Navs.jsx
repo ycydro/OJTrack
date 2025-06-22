@@ -65,7 +65,7 @@ const Navs = ({ user, signOut, timeLogs }) => {
                 </Dropdown>
 
                 <Navbar.Text>
-                  <Button className="sign-out-button" onClick={signOut}>
+                  <Button className="gray-button" onClick={signOut}>
                     <LogOut color="#0a8efd" />
                   </Button>
                 </Navbar.Text>

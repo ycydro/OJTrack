@@ -3,9 +3,12 @@ import Swal from "sweetalert2";
 import { supabase } from "../lib/helper/supabaseClient";
 import dayjs from "dayjs";
 import { Form, Card, Button, Spinner, Nav } from "react-bootstrap";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 import "boxicons";
 import "boxicons/css/boxicons.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../styles/Navs.css";
 import "../styles/App.css";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
@@ -19,7 +22,7 @@ import calculateTotalHours from "../utils/calculateTotalHours";
 
 const Dashboard = ({ user, setUser }) => {
   const [formData, setFormData] = useState({
-    date: new Date().toISOString().split("T")[0],
+    date: dayjs().format("YYYY-MM-DD"),
     time_in: "",
     time_out: "",
     lunch_break: false,
@@ -191,7 +194,8 @@ const Dashboard = ({ user, setUser }) => {
       });
 
       setFormData({
-        date: new Date().toISOString().split("T")[0],
+        // automatically increment formDate by 1 day to avoid inserting log with same date
+        date: dayjs(formData?.date).add(1, "day").format("YYYY-MM-DD"),
         time_in: "",
         time_out: "",
         lunch_break: false,
@@ -224,6 +228,60 @@ const Dashboard = ({ user, setUser }) => {
       if (!result.isConfirmed) return;
 
       const { error } = await supabase.from("time_logs").delete().eq("id", id);
+
+      if (error) throw error;
+
+      Swal.fire({
+        title: "Success!",
+        text: "Successfuly deleted time log.",
+        icon: "success",
+        color: "#ffffff",
+        background: "#1a1a1a",
+        timer: 2000,
+        customClass: {
+          confirmButton: "primary-swal-button",
+        },
+      });
+
+      fetchTimeLogs();
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        title: "Error!",
+        text: error,
+        icon: "Error",
+        color: "#ffffff",
+        background: "#1a1a1a",
+        timer: 2000,
+        customClass: {
+          confirmButton: "primary-swal-button",
+        },
+      });
+    }
+  };
+
+  const handleDeleteAll = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: "Delete all time logs?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        color: "#ffffff",
+        background: "#1a1a1a",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it all!",
+        cancelButtonText: "Cancel",
+        customClass: {
+          confirmButton: "primary-swal-button",
+        },
+      });
+
+      if (!result.isConfirmed) return;
+
+      const { error } = await supabase
+        .from("time_logs")
+        .delete()
+        .eq("user_id", user?.id);
 
       if (error) throw error;
 
@@ -317,21 +375,6 @@ const Dashboard = ({ user, setUser }) => {
           <header className="mb-3 postion-sticky">
             <Navs user={user} signOut={signOut} timeLogs={timeLogs} />
           </header>
-          {/* <header className="row py-3">
-            <div className="col-8">
-              <p className="m-0">
-                Welcome, {user?.user_metadata?.full_name.split(" ")[0]}!
-              </p>
-            </div>
-            <div className="col p-0 d-flex justify-content-end">
-              <button
-                onClick={signOut}
-                className="underline-hover h-100 bg-transparent border-0 text-white text-end"
-              >
-                Sign Out
-              </button>
-            </div>
-          </header> */}
 
           <section className="container-fluid px-0">
             <div className="row align-items-center justify-content-center gap-4">
@@ -384,6 +427,7 @@ const Dashboard = ({ user, setUser }) => {
                       onClick={handleShowEditHours}
                       style={{
                         fontFamily: "inherit",
+                        fontSize: "inherit",
                       }}
                     >
                       <ShinyText
@@ -410,7 +454,7 @@ const Dashboard = ({ user, setUser }) => {
 
           <main className="row gap-4 my-4 flex-md-row flex-column">
             <div className="col container-fluid border border-light-subtle rounded-3 p-0 shadow">
-              <Card bg="dark" className="border-0 rounded-3 transparent-bg">
+              <Card className="border-0 rounded-3 transparent-bg">
                 <Card.Body
                   className="p-0 d-flex flex-column gap-5 justify-content-center align-items-center"
                   style={{ minHeight: "28rem" }}
@@ -477,15 +521,37 @@ const Dashboard = ({ user, setUser }) => {
               </Card>
             </div>
 
-            <div className="col container-fluid border border-light-subtle rounded-3 p-0 shadow mt-3 mt-md-0">
+            <div className="col container-fluid border border-light-subtle rounded-3 p-0 shadow mt-3 mt-md-0 position-relative">
+              <OverlayTrigger
+                placement="top"
+                overlay={
+                  <Tooltip id="button-tooltip-2">Delete all time logs</Tooltip>
+                }
+              >
+                <Button
+                  onClick={handleDeleteAll}
+                  type="button"
+                  className="btn btn-sm gray-button rounded-circle d-flex align-items-center justify-content-center position-absolute"
+                  style={{
+                    top: "-10px",
+                    right: "-10px",
+                    width: "30px",
+                    height: "30px",
+                    zIndex: 1,
+                  }}
+                >
+                  <i className="bx bx-trash fs-6 lh-1"></i>
+                </Button>
+              </OverlayTrigger>
+
               <Card
-                bg="dark"
-                className="border-0 rounded-3 transparent-bg"
+                className="border-0 transparent-bg"
                 style={{
                   minHeight: "28rem",
                   maxHeight: "28rem",
                 }}
               >
+                {/* Rest of your existing code remains the same */}
                 <Card.Body
                   className={`px-0 py-3 d-flex flex-column gap-2 align-items-center scrollable-contents ${
                     isLoading || timeLogs.length <= 0
