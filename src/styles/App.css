@@ -30,6 +30,21 @@
   background: transparent !important;
 }
 
+.advanced-options {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  margin-top: 0;
+  transition: max-height 0.975s ease-out, opacity 0.975s ease,
+    margin-top 0.975s ease;
+}
+
+.advanced-options.expanded {
+  max-height: 500px; /* Should be higher than your content height */
+  opacity: 1;
+  margin-top: 0.75rem;
+}
+
 @media only screen and (max-width: 700px) {
   .label,
   .number {

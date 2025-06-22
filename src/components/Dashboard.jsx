@@ -536,7 +536,6 @@ const Dashboard = ({ user, setUser }) => {
                         <div
                           className="text-primary mb-2 d-flex align-items-center gap-2"
                           onClick={() => {
-                            // scrolls down only when opening.
                             const wasClosed = !showAdvanced;
                             setShowAdvanced(!showAdvanced);
 
@@ -546,51 +545,53 @@ const Dashboard = ({ user, setUser }) => {
                                   top: 325,
                                   behavior: "smooth",
                                 });
+                              } else {
+                                window.scrollTo({
+                                  top: 65,
+                                  behavior: "smooth",
+                                });
                               }
-                            }, 75);
+                            }, 275);
                           }}
                           style={{ userSelect: "none", cursor: "pointer" }}
                         >
                           <span>
                             {showAdvanced ? "Hide options" : "More options..."}
                           </span>
-                          <i
-                            className={`bi bi-chevron-${
-                              showAdvanced ? "up" : "down"
-                            }`}
-                          ></i>
                         </div>
 
-                        {showAdvanced && (
-                          <div className="pt-3 mt-1">
-                            <Form.Group className="mb-3">
-                              <Form.Check
-                                type="switch"
-                                name="lunch_break"
-                                id="lunch_break"
-                                label="Lunch Break"
-                                checked={formData.lunch_break}
-                                onChange={handleInputChange}
-                              />
-                            </Form.Group>
-                            <Form.Group className="d-flex flex-column gap-1">
-                              <Form.Label>
-                                Specify total hours worked:
-                              </Form.Label>
-                              <Form.Control
-                                type="number"
-                                step="0.25"
-                                placeholder="e.g. 8"
-                                id="specified_hours"
-                                name="specified_hours"
-                                onChange={handleInputChange}
-                              />
-                              <Form.Text className="text-white-50">
-                                Leave blank to calculate automatically
-                              </Form.Text>
-                            </Form.Group>
-                          </div>
-                        )}
+                        <div
+                          className={`advanced-options transition ${
+                            showAdvanced ? "expanded" : ""
+                          }`}
+                        >
+                          <Form.Group className="mb-3">
+                            <Form.Check
+                              type="switch"
+                              name="lunch_break"
+                              id="lunch_break"
+                              label="Lunch Break"
+                              checked={formData.lunch_break}
+                              onChange={handleInputChange}
+                            />
+                          </Form.Group>
+                          <Form.Group className="d-flex flex-column gap-1">
+                            <Form.Label style={{ whiteSpace: "nowrap" }}>
+                              Specify total hours worked:
+                            </Form.Label>
+                            <Form.Control
+                              type="number"
+                              step="0.25"
+                              placeholder="e.g. 8"
+                              id="specified_hours"
+                              name="specified_hours"
+                              onChange={handleInputChange}
+                            />
+                            <Form.Text className="text-white-50">
+                              Leave blank to calculate automatically
+                            </Form.Text>
+                          </Form.Group>
+                        </div>
                       </div>
 
                       <Button
