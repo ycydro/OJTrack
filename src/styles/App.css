@@ -40,7 +40,7 @@
 }
 
 .advanced-options.expanded {
-  max-height: 500px; /* Should be higher than your content height */
+  max-height: 500px;
   opacity: 1;
   margin-top: 0.75rem;
 }

@@ -539,6 +539,20 @@ const Dashboard = ({ user, setUser }) => {
                             const wasClosed = !showAdvanced;
                             setShowAdvanced(!showAdvanced);
 
+                            // const hasValue =
+                            //   formData.lunch_break || formData.specified_hours;
+
+                            // if (hasValue) {
+                            //   setFormData((prevFormData) => ({
+                            //     ...prevFormData,
+                            //     lunch_break: false,
+                            //     specified_hours: 0,
+                            //   }));
+                            // }
+
+                            // document.getElementById("specified_hours").value =
+                            //   "";
+
                             setTimeout(() => {
                               if (wasClosed) {
                                 window.scrollTo({
@@ -566,14 +580,23 @@ const Dashboard = ({ user, setUser }) => {
                           }`}
                         >
                           <Form.Group className="mb-3">
-                            <Form.Check
-                              type="switch"
-                              name="lunch_break"
-                              id="lunch_break"
-                              label="Lunch Break"
-                              checked={formData.lunch_break}
-                              onChange={handleInputChange}
-                            />
+                            <OverlayTrigger
+                              placement="left"
+                              overlay={
+                                <Tooltip id="button-tooltip-2">
+                                  Reduce an hour from total calculated hours
+                                </Tooltip>
+                              }
+                            >
+                              <Form.Check
+                                type="switch"
+                                name="lunch_break"
+                                id="lunch_break"
+                                label="Lunch Break"
+                                checked={formData.lunch_break}
+                                onChange={handleInputChange}
+                              />
+                            </OverlayTrigger>
                           </Form.Group>
                           <Form.Group className="d-flex flex-column gap-1">
                             <Form.Label style={{ whiteSpace: "nowrap" }}>
@@ -581,14 +604,14 @@ const Dashboard = ({ user, setUser }) => {
                             </Form.Label>
                             <Form.Control
                               type="number"
-                              step="0.25"
+                              min={0}
                               placeholder="e.g. 8"
                               id="specified_hours"
                               name="specified_hours"
                               onChange={handleInputChange}
                             />
                             <Form.Text className="text-white-50">
-                              Leave blank to calculate automatically
+                              Leave blank to calculate hours automatically
                             </Form.Text>
                           </Form.Group>
                         </div>
