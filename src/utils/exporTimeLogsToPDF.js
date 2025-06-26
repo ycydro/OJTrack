@@ -5,9 +5,20 @@ import formatTimeToAMPM from "./formatTimeToAMPM";
 
 const exporTimeLogsToPDF = (data) => {
   const doc = new jsPDF();
+  // start sa oldest date
+  const ascData = data?.reverse();
+
   doc.setFontSize(18);
-  doc.text("OJT Progress", 14, 22);
-  const tableData = data.map((entry) => [
+
+  // center title
+  const title = "OJT Rendered Hours";
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const textWidth = doc.getTextWidth(title);
+  const x = (pageWidth - textWidth) / 2;
+
+  doc.text(title, x, 15); // Draw title in 10(y) coords
+
+  const tableData = ascData?.map((entry) => [
     dayjs(entry?.date).format("MMMM DD, YYYY"),
     formatTimeToAMPM(entry?.time_in),
     formatTimeToAMPM(entry?.time_out),
@@ -18,8 +29,15 @@ const exporTimeLogsToPDF = (data) => {
   autoTable(doc, {
     head: [["Date", "Time In", "Time Out", "Total Hours", "Lunch Break"]],
     body: tableData,
-    startY: 30,
+    startY: 23,
+    styles: {
+      halign: "center",
+    },
+    headStyles: {
+      halign: "center",
+    },
   });
+
   const today = dayjs().format("MMMM-DD-YYYY");
   doc.save(`OJT-PROGRESS-${today.toUpperCase()}.pdf`);
 };

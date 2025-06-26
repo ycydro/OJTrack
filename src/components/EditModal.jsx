@@ -221,6 +221,16 @@ const EditModal = ({ show, timeLogs, log, handleCloseModal }) => {
                       required
                     />
                   </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Check
+                      type="switch"
+                      name="lunch_break"
+                      id="lunch_break"
+                      label="Lunch Break"
+                      checked={formData.lunch_break}
+                      onChange={handleInputChange}
+                    />
+                  </Form.Group>
 
                   <div className="w-100">
                     <div
@@ -231,42 +241,29 @@ const EditModal = ({ show, timeLogs, log, handleCloseModal }) => {
                       <span>
                         {showEditAdvanced ? "Hide options" : "More options..."}
                       </span>
-                      <i
-                        className={`bi bi-chevron-${
-                          showEditAdvanced ? "up" : "down"
-                        }`}
-                      ></i>
                     </div>
 
-                    {showEditAdvanced && (
-                      <div className="pt-3 mt-1">
-                        <Form.Group className="mb-3">
-                          <Form.Check
-                            type="switch"
-                            name="lunch_break"
-                            id="lunch_break"
-                            label="Lunch Break"
-                            checked={formData.lunch_break}
-                            onChange={handleInputChange}
-                          />
-                        </Form.Group>
-                        <Form.Group>
-                          <Form.Label>Specify total hours worked:</Form.Label>
-                          <Form.Control
-                            type="number"
-                            step="0.25"
-                            placeholder="e.g. 7.5"
-                            id="specified_hours"
-                            name="specified_hours"
-                            value={formData.specified_hours}
-                            onChange={handleInputChange}
-                          />
-                          <Form.Text className="text-white-50">
-                            Leave blank to calculate automatically
-                          </Form.Text>
-                        </Form.Group>
-                      </div>
-                    )}
+                    <div
+                      className={`advanced-options transition ${
+                        showEditAdvanced ? "expanded" : ""
+                      }`}
+                    >
+                      <Form.Group>
+                        <Form.Label>Specify total hours worked:</Form.Label>
+                        <Form.Control
+                          type="number"
+                          step="0.25"
+                          placeholder="e.g. 7.5"
+                          id="specified_hours"
+                          name="specified_hours"
+                          value={formData.specified_hours}
+                          onChange={handleInputChange}
+                        />
+                        <Form.Text className="text-white-50">
+                          Leave blank to calculate automatically
+                        </Form.Text>
+                      </Form.Group>
+                    </div>
                   </div>
                   <Button onClick={handleEdit} className="w-100">
                     Confirm Edit

@@ -39,6 +39,13 @@ const Dashboard = ({ user, setUser }) => {
   const [cumulativeHours, setCumulativeHours] = useState(0);
   const [hoursRequired, setHoursRequired] = useState(486);
   const [progressPercentage, setProgressPercentage] = useState(0);
+  const [defaultLog, setDefaultLog] = useState({});
+
+  useEffect(() => {
+    const storedLog = localStorage.getItem("defaultLog");
+
+    setDefaultLog(JSON.parse(storedLog) || {});
+  }, []);
 
   const fetchHoursRequired = async () => {
     setIsHoursRequiredLoading(true);
@@ -359,6 +366,19 @@ const Dashboard = ({ user, setUser }) => {
     fetchTimeLogs();
   };
 
+  const handleDefaultLogs = () => {
+    console.log(defaultLog);
+    if (Object.keys(defaultLog).length > 0) {
+      setFormData({
+        date: dayjs(defaultLog.date).format("YYYY-MM-DD"),
+        time_in: defaultLog.time_in,
+        time_out: defaultLog.time_out,
+        lunch_break: defaultLog.lunch_break,
+        specified_hours: defaultLog.specified_hours,
+      });
+    }
+  };
+
   useEffect(() => {
     fetchTimeLogs();
   }, []);
@@ -380,9 +400,9 @@ const Dashboard = ({ user, setUser }) => {
     setProgressPercentage(calculateProgressPercentage());
   }, [cumulativeHours, hoursRequired]);
 
-  // useEffect(() => {
-  //   console.log(formData);
-  // }, [formData]);
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   return (
     <div
@@ -531,6 +551,25 @@ const Dashboard = ({ user, setUser }) => {
                           required
                         />
                       </Form.Group>
+                      <Form.Group className="mb-3">
+                        <OverlayTrigger
+                          placement="left"
+                          overlay={
+                            <Tooltip id="button-tooltip-2">
+                              Reduce an hour from total calculated hours
+                            </Tooltip>
+                          }
+                        >
+                          <Form.Check
+                            type="switch"
+                            name="lunch_break"
+                            id="lunch_break"
+                            label="Lunch Break"
+                            checked={formData.lunch_break}
+                            onChange={handleInputChange}
+                          />
+                        </OverlayTrigger>
+                      </Form.Group>
 
                       <div className="w-100">
                         <div
@@ -579,25 +618,6 @@ const Dashboard = ({ user, setUser }) => {
                             showAdvanced ? "expanded" : ""
                           }`}
                         >
-                          <Form.Group className="mb-3">
-                            <OverlayTrigger
-                              placement="left"
-                              overlay={
-                                <Tooltip id="button-tooltip-2">
-                                  Reduce an hour from total calculated hours
-                                </Tooltip>
-                              }
-                            >
-                              <Form.Check
-                                type="switch"
-                                name="lunch_break"
-                                id="lunch_break"
-                                label="Lunch Break"
-                                checked={formData.lunch_break}
-                                onChange={handleInputChange}
-                              />
-                            </OverlayTrigger>
-                          </Form.Group>
                           <Form.Group className="d-flex flex-column gap-1">
                             <Form.Label style={{ whiteSpace: "nowrap" }}>
                               Specify total hours worked:
@@ -606,6 +626,7 @@ const Dashboard = ({ user, setUser }) => {
                               type="number"
                               min={0}
                               placeholder="e.g. 8"
+                              value={formData.specified_hours}
                               id="specified_hours"
                               name="specified_hours"
                               onChange={handleInputChange}
@@ -613,6 +634,26 @@ const Dashboard = ({ user, setUser }) => {
                             <Form.Text className="text-white-50">
                               Leave blank to calculate hours automatically
                             </Form.Text>
+                            <Button
+                              type="button"
+                              className="mt-2 btn text-start p-0 bg-transparent border-0"
+                              onMouseOver={(e) => {
+                                e.target.style.textDecoration = "underline";
+                                e.target.style.color = "gray";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.textDecoration = "none";
+                                e.target.style.color = "white";
+                              }}
+                              onClick={() => {
+                                console.log("default set");
+                                handleDefaultLogs();
+                              }}
+                            >
+                              {Object.keys(defaultLog).length > 0
+                                ? "Submit Default Logs"
+                                : "Set Default Logs"}
+                            </Button>
                           </Form.Group>
                         </div>
                       </div>

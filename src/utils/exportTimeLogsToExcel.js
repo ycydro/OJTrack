@@ -4,7 +4,9 @@ import dayjs from "dayjs";
 import formatTimeToAMPM from "./formatTimeToAMPM";
 
 const exportTimeLogsToExcel = (data) => {
-  const formatted = data.map((entry) => ({
+  // start sa oldest date
+  const ascData = data?.reverse();
+  const formatted = ascData?.map((entry) => ({
     Date: dayjs(entry?.date).format("MMMM DD, YYYY"),
     "Time In": formatTimeToAMPM(entry?.time_in),
     "Time Out": formatTimeToAMPM(entry?.time_out),
