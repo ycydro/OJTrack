@@ -16,6 +16,7 @@ import InsertHoursRequired from "./InsertHoursRequired";
 import Navs from "./Navs";
 import EditModal from "./EditModal";
 import EditTotalHoursModal from "./EditTotalHoursModal";
+import SetDefaultLogs from "./SetDefaultLogs";
 import ShinyText from "./ShinyText";
 import formatTimeToAMPM from "../utils/formatTimeToAMPM";
 import calculateTotalHours from "../utils/calculateTotalHours";
@@ -34,6 +35,7 @@ const Dashboard = ({ user, setUser }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showEditTotalHoursModal, setShowEditTotalHoursModal] = useState(false);
+  const [showSetDefaultLogs, setShowSetDefaultLogs] = useState(false);
   const [logToEdit, setLogToEdit] = useState(null);
   const [timeLogs, setTimeLogs] = useState([]);
   const [cumulativeHours, setCumulativeHours] = useState(0);
@@ -41,11 +43,11 @@ const Dashboard = ({ user, setUser }) => {
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [defaultLog, setDefaultLog] = useState({});
 
-  useEffect(() => {
+  const fetchStoredLogs = async () => {
     const storedLog = localStorage.getItem("defaultLog");
 
     setDefaultLog(JSON.parse(storedLog) || {});
-  }, []);
+  };
 
   const fetchHoursRequired = async () => {
     setIsHoursRequiredLoading(true);
@@ -366,6 +368,15 @@ const Dashboard = ({ user, setUser }) => {
     fetchTimeLogs();
   };
 
+  const hanldeShowSetDefaultLogs = () => {
+    setShowSetDefaultLogs(true);
+  };
+
+  const handleCloseSetDefaultLogs = () => {
+    setShowSetDefaultLogs(false);
+    fetchTimeLogs();
+  };
+
   const handleDefaultLogs = () => {
     console.log(defaultLog);
     if (Object.keys(defaultLog).length > 0) {
@@ -381,6 +392,7 @@ const Dashboard = ({ user, setUser }) => {
 
   useEffect(() => {
     fetchTimeLogs();
+    fetchStoredLogs();
   }, []);
 
   useEffect(() => {
@@ -403,6 +415,10 @@ const Dashboard = ({ user, setUser }) => {
   useEffect(() => {
     console.log(formData);
   }, [formData]);
+
+  useEffect(() => {
+    fetchStoredLogs();
+  }, [showSetDefaultLogs]);
 
   return (
     <div
@@ -634,6 +650,8 @@ const Dashboard = ({ user, setUser }) => {
                             <Form.Text className="text-white-50">
                               Leave blank to calculate hours automatically
                             </Form.Text>
+                          </Form.Group>
+                          <div className="d-flex justify-content-between mt-2">
                             <Button
                               type="button"
                               className="mt-2 btn text-start p-0 bg-transparent border-0"
@@ -646,15 +664,29 @@ const Dashboard = ({ user, setUser }) => {
                                 e.target.style.color = "white";
                               }}
                               onClick={() => {
-                                console.log("default set");
                                 handleDefaultLogs();
                               }}
                             >
-                              {Object.keys(defaultLog).length > 0
-                                ? "Submit Default Logs"
-                                : "Set Default Logs"}
+                              Submit Default Logs
                             </Button>
-                          </Form.Group>
+                            <Button
+                              type="button"
+                              className="mt-2 btn text-start p-0 bg-transparent border-0"
+                              onMouseOver={(e) => {
+                                e.target.style.textDecoration = "underline";
+                                e.target.style.color = "gray";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.textDecoration = "none";
+                                e.target.style.color = "white";
+                              }}
+                              onClick={() => {
+                                hanldeShowSetDefaultLogs();
+                              }}
+                            >
+                              Set Default Logs
+                            </Button>
+                          </div>
                         </div>
                       </div>
 
@@ -853,6 +885,11 @@ const Dashboard = ({ user, setUser }) => {
         user={user}
         fetchHoursRequired={fetchHoursRequired}
         handleCloseEditHours={handleCloseEditHours}
+      />
+
+      <SetDefaultLogs
+        show={showSetDefaultLogs}
+        handleCloseSetDefaultLogs={handleCloseSetDefaultLogs}
       />
     </div>
   );
