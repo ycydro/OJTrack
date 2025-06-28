@@ -651,41 +651,33 @@ const Dashboard = ({ user, setUser }) => {
                               Leave blank to calculate hours automatically
                             </Form.Text>
                           </Form.Group>
-                          <div className="d-flex justify-content-between mt-2">
-                            <Button
-                              type="button"
-                              className="mt-2 btn text-start p-0 bg-transparent border-0"
-                              onMouseOver={(e) => {
-                                e.target.style.textDecoration = "underline";
-                                e.target.style.color = "gray";
-                              }}
-                              onMouseLeave={(e) => {
-                                e.target.style.textDecoration = "none";
-                                e.target.style.color = "white";
-                              }}
-                              onClick={() => {
-                                handleDefaultLogs();
-                              }}
-                            >
-                              Submit Default Logs
-                            </Button>
-                            <Button
-                              type="button"
-                              className="mt-2 btn text-start p-0 bg-transparent border-0"
-                              onMouseOver={(e) => {
-                                e.target.style.textDecoration = "underline";
-                                e.target.style.color = "gray";
-                              }}
-                              onMouseLeave={(e) => {
-                                e.target.style.textDecoration = "none";
-                                e.target.style.color = "white";
-                              }}
-                              onClick={() => {
-                                hanldeShowSetDefaultLogs();
-                              }}
-                            >
-                              Set Default Logs
-                            </Button>
+                          <div className="mt-3">
+                            <div className="row g-2">
+                              <div className="col-12 col-md-6">
+                                <Button
+                                  variant="outline-light"
+                                  size="sm"
+                                  className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
+                                  onClick={handleDefaultLogs}
+                                  disabled={isSubmitting}
+                                >
+                                  <i className="bx bx-time fs-6"></i>
+                                  <span>Autofill Time Log</span>
+                                </Button>
+                              </div>
+                              <div className="col-12 col-md-6">
+                                <Button
+                                  variant="outline-primary"
+                                  size="sm"
+                                  className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
+                                  onClick={hanldeShowSetDefaultLogs}
+                                  disabled={isSubmitting}
+                                >
+                                  <i className="bx bx-cog fs-6"></i>
+                                  <span>Configure Autofill</span>
+                                </Button>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
