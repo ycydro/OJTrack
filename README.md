@@ -6,7 +6,7 @@ A simple time logging web app built with **React**, **Vite**, and **Supabase**. 
 
 ## 📸 Screenshot
 
-![image](https://github.com/user-attachments/assets/366bf073-9663-4730-bef7-5951ade43a0c) 
+![image](https://github.com/user-attachments/assets/39f54641-3293-4976-ac05-a8cc5695845c)
 
 ---
 
