@@ -567,7 +567,7 @@ const Dashboard = ({ user, setUser }) => {
                           required
                         />
                       </Form.Group>
-                      <Form.Group className="mb-1">
+                      <Form.Group className="d-flex justify-content-between align-items-center">
                         <OverlayTrigger
                           placement="left"
                           overlay={
@@ -585,28 +585,12 @@ const Dashboard = ({ user, setUser }) => {
                             onChange={handleInputChange}
                           />
                         </OverlayTrigger>
-                      </Form.Group>
 
-                      <div className="w-100">
                         <div
                           className="text-primary mb-2 d-flex align-items-center gap-2"
                           onClick={() => {
                             const wasClosed = !showAdvanced;
                             setShowAdvanced(!showAdvanced);
-
-                            // const hasValue =
-                            //   formData.lunch_break || formData.specified_hours;
-
-                            // if (hasValue) {
-                            //   setFormData((prevFormData) => ({
-                            //     ...prevFormData,
-                            //     lunch_break: false,
-                            //     specified_hours: 0,
-                            //   }));
-                            // }
-
-                            // document.getElementById("specified_hours").value =
-                            //   "";
 
                             setTimeout(() => {
                               if (wasClosed) {
@@ -628,62 +612,62 @@ const Dashboard = ({ user, setUser }) => {
                             {showAdvanced ? "Hide options" : "More options..."}
                           </span>
                         </div>
+                      </Form.Group>
 
-                        <div
-                          className={`advanced-options transition ${
-                            showAdvanced ? "expanded" : ""
-                          }`}
-                        >
-                          <Form.Group className="d-flex flex-column gap-1">
-                            <Form.Label style={{ whiteSpace: "nowrap" }}>
-                              Specify total hours worked:
-                            </Form.Label>
-                            <Form.Control
-                              type="number"
-                              min={0}
-                              placeholder="e.g. 8"
-                              value={formData.specified_hours}
-                              id="specified_hours"
-                              name="specified_hours"
-                              onChange={handleInputChange}
-                            />
-                            <Form.Text className="text-white-50">
-                              Leave blank to calculate hours automatically
-                            </Form.Text>
-                          </Form.Group>
-                          <div className="mt-3">
-                            <div className="row g-2">
-                              <div className="col-12 col-md-6">
-                                <Button
-                                  variant="outline-light"
-                                  size="sm"
-                                  className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
-                                  onClick={handleDefaultLogs}
-                                  disabled={isSubmitting}
-                                >
-                                  <i className="bx bx-time fs-6"></i>
-                                  <span>Autofill Time Log</span>
-                                </Button>
-                              </div>
-                              <div className="col-12 col-md-6">
-                                <Button
-                                  variant="outline-primary"
-                                  size="sm"
-                                  className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
-                                  onClick={hanldeShowSetDefaultLogs}
-                                  disabled={isSubmitting}
-                                >
-                                  <i className="bx bx-cog fs-6"></i>
-                                  <span>Configure Autofill</span>
-                                </Button>
-                              </div>
+                      <div
+                        className={`advanced-options transition ${
+                          showAdvanced ? "expanded" : ""
+                        }`}
+                      >
+                        <Form.Group className="d-flex flex-column gap-1">
+                          <Form.Label style={{ whiteSpace: "nowrap" }}>
+                            Specify total hours worked:
+                          </Form.Label>
+                          <Form.Control
+                            type="number"
+                            min={0}
+                            placeholder="e.g. 8"
+                            value={formData.specified_hours}
+                            id="specified_hours"
+                            name="specified_hours"
+                            onChange={handleInputChange}
+                          />
+                          <Form.Text className="text-white-50">
+                            Leave blank to calculate hours automatically
+                          </Form.Text>
+                        </Form.Group>
+                        <div className="mt-3">
+                          <div className="row g-2">
+                            <div className="col-12 col-md-6">
+                              <Button
+                                variant="outline-light"
+                                size="sm"
+                                className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
+                                onClick={handleDefaultLogs}
+                                disabled={isSubmitting}
+                              >
+                                <i className="bx bx-time fs-6"></i>
+                                <span>Autofill Time Log</span>
+                              </Button>
+                            </div>
+                            <div className="col-12 col-md-6">
+                              <Button
+                                variant="outline-primary"
+                                size="sm"
+                                className="w-100 d-flex align-items-center justify-content-center gap-2 py-2"
+                                onClick={hanldeShowSetDefaultLogs}
+                                disabled={isSubmitting}
+                              >
+                                <i className="bx bx-cog fs-6"></i>
+                                <span>Configure Autofill</span>
+                              </Button>
                             </div>
                           </div>
                         </div>
                       </div>
 
                       <Button
-                        className="w-100 h-auto mt-2"
+                        className="w-100 h-auto mt-1"
                         type="submit"
                         disabled={isSubmitting}
                       >
