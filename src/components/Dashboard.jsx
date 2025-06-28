@@ -381,7 +381,7 @@ const Dashboard = ({ user, setUser }) => {
     console.log(defaultLog);
     if (Object.keys(defaultLog).length > 0) {
       setFormData({
-        date: dayjs(defaultLog.date).format("YYYY-MM-DD"),
+        date: formData.date,
         time_in: defaultLog.time_in,
         time_out: defaultLog.time_out,
         lunch_break: defaultLog.lunch_break,
@@ -567,7 +567,7 @@ const Dashboard = ({ user, setUser }) => {
                           required
                         />
                       </Form.Group>
-                      <Form.Group className="mb-3">
+                      <Form.Group className="mb-1">
                         <OverlayTrigger
                           placement="left"
                           overlay={

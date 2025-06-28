@@ -82,14 +82,6 @@ const EditModal = ({ show, handleCloseSetDefaultLogs }) => {
                   onSubmit={handleSetDefault}
                 >
                   <Form.Group className="mb-1">
-                    <Form.Label>Date</Form.Label>
-                    <Form.Control
-                      type="date"
-                      name="date"
-                      onChange={handleInputChange}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-1">
                     <Form.Label>Time In</Form.Label>
                     <Form.Control
                       type="time"
