@@ -42,6 +42,7 @@ const Dashboard = ({ user, setUser }) => {
   const [daysWorked, setDaysWorked] = useState(0);
   const [daysRequired, setDaysRequired] = useState(0);
 
+  const [dayHours, setDayHours] = useState(0);
   const [hoursRequired, setHoursRequired] = useState(486);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [defaultLog, setDefaultLog] = useState({});
@@ -62,8 +63,19 @@ const Dashboard = ({ user, setUser }) => {
 
       if (error) throw error;
 
+      console.log(data.length, "data length");
+      console.log(data, "this is data");
+
       if (data.length === 0) {
         // No row exists, insert a default one
+        const { error: insertError } = await supabase
+          .from("total_hours_required")
+          .insert([{ user_id: user?.id, hours_required: 0, day_hours: 0 }]);
+
+        if (insertError) throw insertError;
+
+        setHoursRequired(0);
+      } else if (data[0].hours_required === null) {
         const { error: insertError } = await supabase
           .from("total_hours_required")
           .insert([{ user_id: user?.id, hours_required: 0 }]);
@@ -71,8 +83,19 @@ const Dashboard = ({ user, setUser }) => {
         if (insertError) throw insertError;
 
         setHoursRequired(0);
+        setDayHours(0);
+      } else if (data[0].day_hours <= 0) {
+        const { error: insertError } = await supabase
+          .from("total_hours_required")
+          .insert([{ user_id: user?.id, day_hours: 0 }]);
+
+        if (insertError) throw insertError;
+
+        setHoursRequired(0);
+        setDayHours(0);
       } else {
         setHoursRequired(data[0].hours_required);
+        setDayHours(data[0].day_hours);
       }
     } catch (error) {
       console.error("Error fetching or inserting time log:", error.message);
@@ -408,12 +431,12 @@ const Dashboard = ({ user, setUser }) => {
   }, [timeLogs]);
 
   useEffect(() => {
-    setDaysWorked(Math.ceil(cumulativeHours / 8));
-  }, [cumulativeHours]);
+    setDaysWorked(Math.ceil(cumulativeHours / dayHours));
+  }, [cumulativeHours, dayHours]);
 
   useEffect(() => {
-    setDaysRequired(Math.ceil(hoursRequired / 8));
-  }, [hoursRequired]);
+    setDaysRequired(Math.ceil(hoursRequired / dayHours));
+  }, [hoursRequired, dayHours]);
 
   useEffect(() => {
     const calculateProgressPercentage = () => {
@@ -422,6 +445,8 @@ const Dashboard = ({ user, setUser }) => {
 
     setProgressPercentage(calculateProgressPercentage());
   }, [cumulativeHours, hoursRequired]);
+
+  useEffect(() => {});
 
   useEffect(() => {
     console.log(formData);
@@ -486,14 +511,22 @@ const Dashboard = ({ user, setUser }) => {
                 </div>
               </div>
 
-              <div className="col-auto d-flex flex-column h-100 justify-content-center align-items-center px-3">
-                <div
-                  style={{
-                    color: "#949494",
-                  }}
-                >
-                  Total days worked: {daysWorked} / {daysRequired} days
-                </div>
+              <div className="col-auto d-flex flex-column h-100 justify-content-center gap-1 align-items-center px-3">
+                {isHoursRequiredLoading ? (
+                  <Spinner
+                    style={{
+                      fontSize: "8px",
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      color: "#949494",
+                    }}
+                  >
+                    Total days worked: {daysWorked} / {daysRequired} days
+                  </div>
+                )}
                 <div
                   className="h1 m-0"
                   style={{ fontSize: "clamp(1rem, 4vw, 2.5rem)" }}

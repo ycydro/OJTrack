@@ -6,13 +6,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const InsertHoursRequired = ({ fetchHoursRequired, user }) => {
   const [hours, setHours] = useState(0);
+  const [dayHours, setDayHours] = useState(0);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { error } = await supabase
         .from("total_hours_required")
-        .update({ hours_required: hours })
+        .update({ hours_required: hours, day_hours: dayHours })
         .eq("user_id", user?.id)
         .select();
 
@@ -28,6 +29,7 @@ const InsertHoursRequired = ({ fetchHoursRequired, user }) => {
     } finally {
       fetchHoursRequired();
       setHours(0);
+      setDayHours(0);
     }
   };
 
@@ -67,6 +69,20 @@ const InsertHoursRequired = ({ fetchHoursRequired, user }) => {
                 min="0"
                 value={hours}
                 onChange={(e) => setHours(e.target.value)}
+                className="py-3 bg-dark border-dark text-light"
+                style={{ borderRadius: "8px" }}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-4">
+              <Form.Label className="text-light mb-2">
+                Day = How Many Hours?
+              </Form.Label>
+              <Form.Control
+                type="number"
+                min="1"
+                value={dayHours}
+                onChange={(e) => setDayHours(e.target.value)}
                 className="py-3 bg-dark border-dark text-light"
                 style={{ borderRadius: "8px" }}
               />
