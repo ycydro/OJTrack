@@ -39,7 +39,7 @@ const Dashboard = ({ user, setUser }) => {
   const [logToEdit, setLogToEdit] = useState(null);
   const [timeLogs, setTimeLogs] = useState([]);
   const [cumulativeHours, setCumulativeHours] = useState(0);
-  const [daysLeft, setDaysLeft] = useState(0);
+  const [daysWorked, setDaysWorked] = useState(0);
   const [daysRequired, setDaysRequired] = useState(0);
 
   const [hoursRequired, setHoursRequired] = useState(486);
@@ -408,7 +408,7 @@ const Dashboard = ({ user, setUser }) => {
   }, [timeLogs]);
 
   useEffect(() => {
-    setDaysLeft(Math.ceil(cumulativeHours / 8));
+    setDaysWorked(Math.ceil(cumulativeHours / 8));
   }, [cumulativeHours]);
 
   useEffect(() => {
@@ -492,7 +492,7 @@ const Dashboard = ({ user, setUser }) => {
                     color: "#949494",
                   }}
                 >
-                  Total days left: {daysLeft} / {daysRequired} days
+                  Total days worked: {daysWorked} / {daysRequired} days
                 </div>
                 <div
                   className="h1 m-0"
