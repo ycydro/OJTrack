@@ -39,6 +39,9 @@ const Dashboard = ({ user, setUser }) => {
   const [logToEdit, setLogToEdit] = useState(null);
   const [timeLogs, setTimeLogs] = useState([]);
   const [cumulativeHours, setCumulativeHours] = useState(0);
+  const [daysLeft, setDaysLeft] = useState(0);
+  const [daysRequired, setDaysRequired] = useState(0);
+
   const [hoursRequired, setHoursRequired] = useState(486);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [defaultLog, setDefaultLog] = useState({});
@@ -405,6 +408,14 @@ const Dashboard = ({ user, setUser }) => {
   }, [timeLogs]);
 
   useEffect(() => {
+    setDaysLeft(Math.ceil(cumulativeHours / 8));
+  }, [cumulativeHours]);
+
+  useEffect(() => {
+    setDaysRequired(Math.ceil(hoursRequired / 8));
+  }, [hoursRequired]);
+
+  useEffect(() => {
     const calculateProgressPercentage = () => {
       return ((cumulativeHours / hoursRequired) * 100).toFixed(2);
     };
@@ -475,8 +486,15 @@ const Dashboard = ({ user, setUser }) => {
                 </div>
               </div>
 
-              <div className="col-auto d-flex justify-content-center align-items-center px-3">
-                <span
+              <div className="col-auto d-flex flex-column h-100 justify-content-center align-items-center px-3">
+                <div
+                  style={{
+                    color: "#949494",
+                  }}
+                >
+                  Total days left: {daysLeft} / {daysRequired} days
+                </div>
+                <div
                   className="h1 m-0"
                   style={{ fontSize: "clamp(1rem, 4vw, 2.5rem)" }}
                 >
@@ -518,7 +536,7 @@ const Dashboard = ({ user, setUser }) => {
                     </OverlayTrigger>
                   )}{" "}
                   hours
-                </span>
+                </div>
               </div>
             </div>
           </section>
